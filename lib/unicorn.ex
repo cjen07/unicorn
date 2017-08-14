@@ -4,6 +4,7 @@ defmodule Unicorn.TedList do
   schema "ted_list" do
     field :title
     field :link
+    field :status, :boolean
   end
 end
 
@@ -42,29 +43,35 @@ defmodule Unicorn do
     |> where([i], i.status == false)
     |> select([i], i)
     |> Repo.all
+    |> Enum.at(0)
     |> (fn x -> 
-      m = div(length(x), n) + 1
-      Enum.chunk(x, m, m, []) 
+      {t, l} = {x.title, x.link}
+      download(t, l)
+      audio(t)
     end).()
-    |> Enum.each(fn x -> 
-      Task.async(fn ->
-        Enum.each(x, fn x ->
-          {t, l} = {x.title, x.link}
-          download(t, l)
-          audio(t)
-          Ecto.Changeset.change(x, %{status: true})
-          |> Repo.update!()
-        end)
-      end)
-    end)
+    # |> (fn x -> 
+    #   m = div(length(x), n) + 1
+    #   Enum.chunk(x, m, m, []) 
+    # end).()
+    # |> Enum.each(fn x -> 
+    #   Task.async(fn ->
+    #     Enum.each(x, fn x ->
+    #       {t, l} = {x.title, x.link}
+    #       download(t, l)
+    #       audio(t)
+    #       Ecto.Changeset.change(x, %{status: true})
+    #       |> Repo.update!()
+    #     end)
+    #   end)
+    # end)
 
   end
 
   def download(t, l) do
-    System.cmd("youtube-dl", [@host <> l, "--ouput", t <> ".mp4"], cd: "video")
+    System.cmd("youtube-dl", [@host <> l, "--output", t <> ".mp4"], cd: "video", stderr_to_stdout: true)
   end
 
   def audio(t) do
-    System.cmd("ffmpeg", ["-i", @proxy, t <> ".mp4", "../audio/" <> t <> ".mp3"], cd: "video")
+    System.cmd("ffmpeg", ["-i", t <> ".mp4", "../audio/" <> t <> ".mp3"], cd: "video", stderr_to_stdout: true)
   end
 end
