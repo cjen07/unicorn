@@ -17,6 +17,9 @@ defmodule Unicorn do
   alias Unicorn.TedList
 
   @host "https://www.ted.com"
+  @path Application.get_env(:unicorn, :path)
+  @audio @path <> "audio/"
+  @video @path <> "video/"
 
   def run() do
     list(1)
@@ -62,10 +65,10 @@ defmodule Unicorn do
   end
 
   def download(t, l) do
-    System.cmd("youtube-dl", [@host <> l, "--output", t <> ".mp4"], cd: "video", stderr_to_stdout: true)
+    System.cmd("youtube-dl", [@host <> l, "--output", @video <> t <> ".mp4"], stderr_to_stdout: true)
   end
 
   def audio(t) do
-    System.cmd("ffmpeg", ["-i", t <> ".mp4", "../audio/" <> t <> ".mp3"], cd: "video", stderr_to_stdout: true)
+    System.cmd("ffmpeg", ["-i", @video <> t <> ".mp4", @audio <> t <> ".mp3"], stderr_to_stdout: true)
   end
 end
