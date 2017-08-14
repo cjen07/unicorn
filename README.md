@@ -1,6 +1,6 @@
 # Unicorn
 
-Get TED video and audio, just for learning
+Get all TED video and audio, just for learning
 
 ## prerequisite
 
