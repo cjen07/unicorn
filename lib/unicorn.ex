@@ -43,27 +43,21 @@ defmodule Unicorn do
     |> where([i], i.status == false)
     |> select([i], i)
     |> Repo.all
-    |> Enum.at(0)
     |> (fn x -> 
-      {t, l} = {x.title, x.link}
-      download(t, l)
-      audio(t)
+      m = div(length(x), n) + 1
+      Enum.chunk(x, m, m, []) 
     end).()
-    # |> (fn x -> 
-    #   m = div(length(x), n) + 1
-    #   Enum.chunk(x, m, m, []) 
-    # end).()
-    # |> Enum.each(fn x -> 
-    #   Task.async(fn ->
-    #     Enum.each(x, fn x ->
-    #       {t, l} = {x.title, x.link}
-    #       download(t, l)
-    #       audio(t)
-    #       Ecto.Changeset.change(x, %{status: true})
-    #       |> Repo.update!()
-    #     end)
-    #   end)
-    # end)
+    |> Enum.each(fn x -> 
+      Task.async(fn ->
+        Enum.each(x, fn x ->
+          {t, l} = {x.title, x.link}
+          download(t, l)
+          audio(t)
+          Ecto.Changeset.change(x, %{status: true})
+          |> Repo.update!()
+        end)
+      end)
+    end)
 
   end
 
