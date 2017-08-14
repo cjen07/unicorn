@@ -1,21 +1,12 @@
 # Unicorn
 
-**TODO: Add description**
+crawl all TED video and audio, just for learning
 
-## Installation
+erlang 20.0
+elixir 1.5.1
+rust 1.19.0
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `unicorn` to your list of dependencies in `mix.exs`:
+youtube-dl 2017.08.13
+ffmpeg 2.8.11
 
-```elixir
-def deps do
-  [
-    {:unicorn, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/unicorn](https://hexdocs.pm/unicorn).
-
+set your path in config.exs and create audio and video folder in it
