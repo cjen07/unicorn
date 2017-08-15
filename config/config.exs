@@ -2,7 +2,7 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :unicorn, path: "./"
+config :unicorn, path: "/srv/"
 
 config :unicorn, ecto_repos: [Unicorn.Repo]
 

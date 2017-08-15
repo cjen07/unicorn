@@ -76,8 +76,8 @@ defmodule Unicorn do
     Unicorn.TedList
     |> select([i], i.title)
     |> Repo.all
-    |> Enum.filter(x, fn x -> 
-      find(t) != ""
+    |> Enum.filter(fn x -> 
+      find(x) != ""
     end)
     |> length()
   end
