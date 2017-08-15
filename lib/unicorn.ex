@@ -32,7 +32,7 @@ defmodule Unicorn do
     case c do
       [] -> :ok
       _ -> 
-        Enum.each(c, fn x -> Repo.insert! %TedList{title: text(x), link: attr(x, "href")} end)
+        Enum.each(c, fn x -> Repo.insert! %TedList{title: text(x), link: attr(x, "href"), status: false} end)
         list(n + 1)
     end
   end
@@ -73,17 +73,18 @@ defmodule Unicorn do
   end
 
   def check() do
+    video_list = File.read!(@path <> "video_list")
     Unicorn.TedList
-    |> select([i], i.title)
+    |> select([i], i)
     |> Repo.all
     |> Enum.filter(fn x -> 
-      find(x) != ""
+      !String.contains?(video_list, x.title)
     end)
-    |> length()
+    |> Enum.each(fn x -> Repo.update!(Ecto.Changeset.change(x, %{status: false})) end)
   end
 
   def find(t) do
-    System.cmd("sh", ["find.sh", t], stderr_to_stdout: true)
+    System.cmd("sh", ["/home/cjen07/unicorn/find.sh", t], cd: @video,  stderr_to_stdout: true)
     |> elem(0)
   end
 end
