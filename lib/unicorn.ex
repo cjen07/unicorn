@@ -71,4 +71,19 @@ defmodule Unicorn do
   def audio(t) do
     System.cmd("ffmpeg", ["-i", @video <> t <> ".mp4", @audio <> t <> ".mp3"], stderr_to_stdout: true)
   end
+
+  def check() do
+    Unicorn.TedList
+    |> select([i], i.title)
+    |> Repo.all
+    |> Enum.filter(x, fn x -> 
+      find(t) != ""
+    end)
+    |> length()
+  end
+
+  def find(t) do
+    System.cmd("sh", ["find.sh", t], stderr_to_stdout: true)
+    |> elem(0)
+  end
 end
